@@ -1,0 +1,27 @@
+import { useSelector } from "react-redux";
+import { getallCardTotal } from "../../../../../Service/Ecommerce.service";
+import { Subtotal } from "../../../../../utils/Constant";
+
+const InvoiceOrderTotal = () => {
+  const { cart } = useSelector((state: any) => state.cartData);
+  return (
+    <>
+      <td> </td>
+      <td> </td>
+      <td style={{ padding: "5px 0", paddingTop: 15 }}>
+        <span>{Subtotal}</span>
+      </td>
+      <td
+        style={{
+          padding: "5px 0",
+          textAlign: "right",
+          paddingTop: 15,
+        }}
+      >
+        <span>{getallCardTotal(cart)}</span>
+      </td>
+    </>
+  );
+};
+
+export default InvoiceOrderTotal;
