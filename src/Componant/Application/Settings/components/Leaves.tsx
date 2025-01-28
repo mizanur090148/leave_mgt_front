@@ -1,19 +1,18 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { Card, CardBody, Col, Form, FormGroup, Input, Label, Row } from "reactstrap";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useSelector } from "react-redux";
 import {
   deleteRequest,
   getRequest,
   patchRequest,
   postRequest,
 } from "../../../../utils/axiosRequests";
-import { Btn, H3 } from "../../../../AbstractElements";
+import { Btn } from "../../../../AbstractElements";
 import CardHeaderCommon from "../../../../CommonElements/CardHeaderCommon/CardHeaderCommon";
 import Loader from "../../../../Data/Ui-Kits/Loader/Loader";
 import ToastCustom from "../../../BonusUi/Toast/LiveToast/TopToast/ToastCustom";
 import CommonModal from "../../../Ui-Kits/Modal/Common/CommonModal";
-import { ASSESMENT_YEARS } from "../../../../utils/helpers";
+import { boolean } from "yup";
 
 interface PropertyItem {
   id: string;
@@ -26,11 +25,7 @@ interface FormInputs {
   status: number;
 }
 
-type UrlProps = {
-  type: string;
-};
-
-const List = ({ type }: UrlProps) => {
+const Leaves = () => {
   //const userInfo = useSelector((state: any) => state.auth.data);
   const [saveLoading, setSaveLoading] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -41,25 +36,6 @@ const List = ({ type }: UrlProps) => {
   const [items, setItems] = useState<any[]>([]);
   const [id, setId] = useState<any>("");
 
-  const getTitle = () => {
-    let title = "";
-    switch (type) {
-      case "groups":
-        title = "Group";
-        break;
-      case "companies":
-        title = "Company";
-        break;
-      case "users":
-        title = "User";
-        break;
-      case "leaves":
-        title = "Leaves";
-        break;
-    }
-    return title;
-  };
-
   const {
     register,
     handleSubmit,
@@ -69,8 +45,8 @@ const List = ({ type }: UrlProps) => {
     reset,
   } = useForm<FormInputs>({
     defaultValues: {
-      name: "", // This default will only be used when no values are set
-      status: 1, // This default will only be used when no values are set
+      name: "",
+      status: 1,
     },
   });
 
@@ -78,8 +54,8 @@ const List = ({ type }: UrlProps) => {
     try {
       setLoading(true);
       //const res = await getRequest(`settings/common?type=${type}`);
-      const res = await getRequest(type);
-      setItems(res);
+      const res = await getRequest('settings/leaves');
+      setItems(res.data);
       setLoading(false);
     } catch (error: any) {
       setLoading(false);
@@ -98,7 +74,7 @@ const List = ({ type }: UrlProps) => {
     if (confirmation) {
       const updatedData = [...items];
       if (id) {
-        await deleteRequest(`settings/common/${id}`)
+        await deleteRequest(`settings/leaves/${id}`)
           .then(() => {
             setItems(updatedData.filter((item) => item.id !== id));
           })
@@ -116,10 +92,10 @@ const List = ({ type }: UrlProps) => {
     try {
       console.log("id", id);
       setSaveLoading(true);
-      const inputData = { ...data, type };
+      const inputData = { ...data };
       const res = id
-        ? await patchRequest(`settings/common/${id}`, inputData)
-        : await postRequest("settings/common", inputData);
+        ? await patchRequest(`settings/leaves/${id}`, inputData)
+        : await postRequest("settings/leaves", inputData);
       if (id) {
         setItems((prevItems) =>
           prevItems.map((item) => (item.id === id ? res.data : item))
@@ -142,10 +118,11 @@ const List = ({ type }: UrlProps) => {
   const modalTwoToggle = () => setModalOpen(!modalOpen);
 
   const editData = (item: any) => {
+    console.log(item, "item")
     setErrorMsg("");
     setId(item.id);
     setValue("name", item.name); // Pre-fill the name
-    setValue("status", item.status); // Pre-fill the status
+    setValue("status", item.status ? 1 : 0); // Pre-fill the status
     setModalOpen(true);
   };
 
@@ -163,7 +140,7 @@ const List = ({ type }: UrlProps) => {
   return (
     <Col xl="9">
       <Card className="profile-right">
-        <CardHeaderCommon title={getTitle()} tagClass="card-title mb-0" />
+        <CardHeaderCommon title={'Leaves'} tagClass="card-title mb-0" />
         <CardBody>
           {loading ? (
             <Loader loading={loading} />
@@ -191,10 +168,6 @@ const List = ({ type }: UrlProps) => {
                     <tr>
                       <th>#</th>
                       <th>Name</th>
-                      <th>Phone</th>
-                      <th>Email</th>
-                      <th>Responsile</th>
-                      <th>Address</th>
                       <th>Status</th>
                       <th></th>
                     </tr>
@@ -205,13 +178,9 @@ const List = ({ type }: UrlProps) => {
                         <tr key={item.id}>
                           <td>{index + 1}</td>
                           <td>{item.name}</td>
-                          <td>{item.mobile_no}</td>
-                          <td>{item.email}</td>
-                          <td>{item.responsible_person}</td>
-                          <td>{item.address}</td>
                           <td>{item.status ? "Active" : "Inactive"}</td>
                           <td className="action-td">
-                            <span>
+                            <span className="text-success">
                               <i
                                 className="fa fa-edit cursor-pointer"
                                 aria-hidden="true"
@@ -243,7 +212,7 @@ const List = ({ type }: UrlProps) => {
                   <Row>
                     <Col>
                       <div style={{ fontSize: "16px", fontWeight: "bold" }}>
-                        {getTitle()}
+                        Leave
                       </div>
                     </Col>
                     <Col sm={1}>
@@ -258,48 +227,29 @@ const List = ({ type }: UrlProps) => {
                   <Form onSubmit={handleSubmit(onSubmit)}>
                     <Row className="g-3">
                       <Col md="12">
-                        {(type === 'assessment-year' || type === 'income-year') ? (
-                          <Fragment>
-                            <Label>Assessment Year</Label>
-                            <Input
-                              style={{ padding: "6px 10px" }}
-                              type="select"
-                              bsSize="sm"
-                              className="form-select select-custom"
-                              {...register(`name`, {
-                                required: "This is required",
-                              })}
-                              value={name}
-                              defaultValue={name}
-                              onChange={(e) => {
-                                setValue(`name`, e.target.value);
-                              }}
-                            >
-                              <option value="">Select One</option>
-                              {ASSESMENT_YEARS?.map((data: any, index) => (
-                                <option key={index} value={data.name}>
-                                  {data.value}
-                                </option>
-                              ))}
-                            </Input></Fragment>) : (<Fragment>
-                              <Label>Name</Label>
-                              <Input
-                                bsSize="sm"
-                                type="text"
-                                className={`${errors?.name ? "is-invalid" : ""}`}
-                                {...register("name", {
-                                  required: "This field is required",
-                                  maxLength: {
-                                    value: 60,
-                                    message:
-                                      "Name can't be longer than 30 characters",
-                                  },
-                                })}
-                                onChange={(e) => {
-                                  setValue("name", e.target.value);
-                                }}
-                                defaultValue={name}
-                              /></Fragment>)}
+                        <Label>Name</Label>
+                        <Input
+                          bsSize="sm"
+                          type="text"
+                          className={`${errors?.name ? "is-invalid" : ""}`}
+                          {...register("name", {
+                            required: "This field is required",
+                            maxLength: {
+                              value: 40,
+                              message:
+                                "Name can't be longer than 40 characters",
+                            },
+                            minLength: {
+                              value: 3,
+                              message:
+                                "Name can't be less than 3 characters",
+                            },
+                          })}
+                          onChange={(e) => {
+                            setValue("name", e.target.value);
+                          }}
+                          defaultValue={name}
+                        />
                         {errors?.name && (
                           <span className="error-msg">
                             {errors?.name?.message}
@@ -321,16 +271,20 @@ const List = ({ type }: UrlProps) => {
                             {...register("status", {
                               required: "This field is required",
                             })}
+                            defaultValue={status} // Watch for changes
                             value={status} // Watch for changes
-                            onChange={(e) => setValue("status", parseInt(e.target.value, 10))} // Convert string to number
+                            onChange={(e) => setValue("status", parseInt(e.target.value))} // Convert string to number
                           >
                             <option value="1">Active</option>
                             <option value="0">Inactive</option>
                           </Input>
+                          {errors?.status && (
+                            <span className="error-msg">
+                              {errors?.status?.message}
+                            </span>
+                          )}
                         </FormGroup>
                       </Col>
-
-
                     </Row>
                     <hr />
                     <Row className="mt-3">
@@ -355,4 +309,4 @@ const List = ({ type }: UrlProps) => {
   );
 };
 
-export default List;
+export default Leaves;

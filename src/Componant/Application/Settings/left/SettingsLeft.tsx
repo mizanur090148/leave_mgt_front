@@ -17,90 +17,30 @@ const PastReturnLeft = ({
         />
         <CardBody>
           <Row
-            className={`${activeMenu === "vehicle" && "active"}`}
-            onClick={() => setActiveMenu("vehicle")}
+            className={`${activeMenu === "users" && "active"}`}
+            onClick={() => setActiveMenu("users")}
           >
-            <div className="title">Vehicle Types</div>
+            <div className="title">Users</div>
           </Row>
           <Row
-            className={`${activeMenu === "capacity" && "active"}`}
-            onClick={() => setActiveMenu("capacity")}
+            className={`${activeMenu === "groups" && "active"}`}
+            onClick={() => setActiveMenu("groups")}
           >
-            <div className="title">Capacities</div>
+            <div className="title">Groups</div>
+          </Row>
+          <Row
+            className={`${activeMenu === "companies" && "active"}`}
+            onClick={() => setActiveMenu("companies")}
+          >
+            <div className="title">Companies</div>
           </Row>
           <Row
             className={`${
-              activeMenu === "non-agriculture-property" && "active"
+              activeMenu === "leaves" && "active"
             }`}
-            onClick={() => setActiveMenu("non-agriculture-property")}
+            onClick={() => setActiveMenu("leaves")}
           >
-            <div className="title">Non Agricultural Properties</div>
-          </Row>
-          <Row
-            className={`${activeMenu === "agriculture-property" && "active"}`}
-            onClick={() => setActiveMenu("agriculture-property")}
-          >
-            <div className="title">Agricultural Properties</div>
-          </Row>
-          <Row
-            className={`${activeMenu === "furniture" && "active"}`}
-            onClick={() => setActiveMenu("furniture")}
-          >
-            <div className="title">Furniture Types</div>
-          </Row>
-          <Row
-            className={`${activeMenu === "jewellery" && "active"}`}
-            onClick={() => setActiveMenu("jewellery")}
-          >
-            <div className="title">Jewellery Types</div>
-          </Row>
-          <Row
-            className={`${activeMenu === "location" && "active"}`}
-            onClick={() => setActiveMenu("location")}
-          >
-            <div className="title">Locations</div>
-          </Row>
-          <Row
-            className={`${activeMenu === "location" && "active"}`}
-            onClick={() => setActiveMenu("tax-payer-location")}
-          >
-            <div className="title">Tax Payer Location</div>
-          </Row>
-          <Row
-            className={`${activeMenu === "circle" && "active"}`}
-            onClick={() => setActiveMenu("circle")}
-          >
-            <div className="title">Circles</div>
-          </Row>
-          <Row
-            className={`${activeMenu === "region" && "active"}`}
-            onClick={() => setActiveMenu("region")}
-          >
-            <div className="title">Regions</div>
-          </Row>
-          <Row
-            className={`${activeMenu === "zone" && "active"}`}
-            onClick={() => setActiveMenu("zone")}
-          >
-            <div className="title">Zones</div>
-          </Row>
-          <Row
-            className={`${activeMenu === "income-year" && "active"}`}
-            onClick={() => setActiveMenu("income-year")}
-          >
-            <div className="title">Income Years</div>
-          </Row>
-          <Row
-            className={`${activeMenu === "assessment-year" && "active"}`}
-            onClick={() => setActiveMenu("assessment-year")}
-          >
-            <div className="title">Assessment Years</div>
-          </Row>
-          <Row
-            className={`${activeMenu === "country" && "active"}`}
-            onClick={() => setActiveMenu("country")}
-          >
-            <div className="title">Countries</div>
+            <div className="title">Leaves</div>
           </Row>
         </CardBody>
       </Card>
