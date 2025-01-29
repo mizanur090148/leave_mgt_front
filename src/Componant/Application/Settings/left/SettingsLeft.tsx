@@ -12,7 +12,7 @@ const PastReturnLeft = ({
     <Col xl="3">
       <Card className="settings-left">
         <CardHeaderCommon
-          title={"Tax Return Summary"}
+          title={"Settings"}
           tagClass="card-title mb-0"
         />
         <CardBody>
@@ -41,6 +41,14 @@ const PastReturnLeft = ({
             onClick={() => setActiveMenu("leaves")}
           >
             <div className="title">Leaves</div>
+          </Row>
+          <Row
+            className={`${
+              activeMenu === "companyLeaves" && "active"
+            }`}
+            onClick={() => setActiveMenu("companyLeaves")}
+          >
+            <div className="title">Company Leaves</div>
           </Row>
         </CardBody>
       </Card>
